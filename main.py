@@ -9,7 +9,6 @@ import pandas as pd
 from random import *
 
 dotenv.load_dotenv()
-guild_ids=["1028695205949476904"]
 
 intents = discord.Intents.default()
 intents.members = True
@@ -20,11 +19,11 @@ bot = discord.Bot(intents=intents)
 async def on_ready():
     await bot.change_presence(activity=discord.Game('VALORANT'))
 
-@bot.slash_command(guild_ids=guild_ids, description="Sends the bot's invite link.")
+@bot.slash_command(description="Sends the bot's invite link.")
 async def invite(ctx: discord.ApplicationContext):
     await ctx.send_response("https://discord.com/api/oauth2/authorize?client_id=898298976153591070&permissions=0&scope=applications.commands%20bot")
 
-@bot.slash_command(guild_ids=guild_ids, description="Sends the bot's latency.")
+@bot.slash_command(description="Sends the bot's latency.")
 async def ping(ctx: discord.ApplicationContext):
     await ctx.respond('Pong! {0}ms'.format(math.floor(bot.latency*1000)))
 
@@ -32,7 +31,7 @@ async def ping(ctx: discord.ApplicationContext):
 async def logo(ctx: discord.ApplicationContext):
     await ctx.send_response("https://commons.wikimedia.org/wiki/File:Valorant_logo.svg#/media/File:Valorant_logo_-_pink_color_version.svg")
 
-@bot.slash_command(guild_ids=guild_ids, description="Sends the regional leaderboard.")
+@bot.slash_command(description="Sends the regional leaderboard.")
 async def lb(ctx: discord.ApplicationContext,region: Option(str, 'Select Region na/eu/ap/kr', required = True, choices = ["na", "eu", "ap", "kr", "latam", "br"]), top: Option(int, 'Enter number of entries (Default=10)', default = 10)):
     embed = discord.Embed(
             title = f"Fetching leaderboard of {region}",
@@ -52,7 +51,7 @@ async def lb(ctx: discord.ApplicationContext,region: Option(str, 'Select Region 
             color = discord.Colour.from_rgb(253,68,86)
         )
         await ctx.edit(embed=embed)
-@bot.slash_command(guild_ids=guild_ids, description="Sends the player's data.")
+@bot.slash_command(description="Sends the player's data.")
 async def valodata(ctx: discord.ApplicationContext,username: Option(str, 'Enter Username', required = True),tag: Option(str, 'Enter Tagline', required = True),region: Option(str, 'Select Region na/eu/ap/kr', required = True, choices = ["na", "eu", "ap", "kr", "latam", "br"])):
     embed = discord.Embed(
             title = f"Fetching player details of {username}#{tag}",
@@ -84,7 +83,7 @@ async def valodata(ctx: discord.ApplicationContext,username: Option(str, 'Enter 
         await ctx.edit(embed=embed)
 
 
-@bot.slash_command(guild_ids=guild_ids, description="Get mmr history")
+@bot.slash_command(description="Get mmr history")
 async def mmr_history(ctx: discord.ApplicationContext, username: Option(str, 'Enter Username', required = True), tag: Option(str, 'Enter tag',required = True),region: Option(str, 'Select Region na/eu/ap/kr', required = True, choices = ["na", "eu", "ap", "kr", "latam", "br"])):
     embed = discord.Embed(
             title = f"Fetching account details of {username}#{tag}",
@@ -124,7 +123,7 @@ async def mmr_history(ctx: discord.ApplicationContext, username: Option(str, 'En
         )
         await ctx.edit(embed=embed)
 
-@bot.slash_command(guild_ids=guild_ids, description="Get mmr history without graph")
+@bot.slash_command(description="Get mmr history without graph")
 async def mmr_history_text(ctx: discord.ApplicationContext, username: Option(str, 'Enter Username', required = True), tag: Option(str, 'Enter tag',required = True),region: Option(str, 'Select Region na/eu/ap/kr', required = True, choices = ["na", "eu", "ap", "kr", "latam", "br"])):
     embed = discord.Embed(
             title = f"Fetching player data of {username}#{tag}",
@@ -156,7 +155,7 @@ async def mmr_history_text(ctx: discord.ApplicationContext, username: Option(str
             color = discord.Colour.from_rgb(253,68,86)
         )
         await ctx.edit(embed=embed)
-@bot.slash_command(guild_ids=guild_ids, description="Get account details")
+@bot.slash_command(description="Get account details")
 async def account_details(ctx: discord.ApplicationContext, username: Option(str, 'Enter Username', required = True), tag: Option(str, 'Enter tag',required = True)):
     embed = discord.Embed(
             title = f"Fetching account details of {username}#{tag}",
