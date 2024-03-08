@@ -20,25 +20,9 @@ bot = discord.Bot(intents=intents)
 async def on_ready():
     await bot.change_presence(activity=discord.Game('VALORANT'))
 
-    
-
-@bot.slash_command(guild_ids=guild_ids, description="Meme.")
-async def atomix(ctx: discord.ApplicationContext):
-    embed = discord.Embed(
-            title = f"Fetching memes",
-            color = discord.Colour.from_rgb(253,68,86)
-        )
-    await ctx.respond(embed=embed)
-    try:
-        embed = discord.Embed()
-        endpoint = "https://api.imgflip.com/get_memes"
-        res = requests.get(endpoint).json()
-        random_int = randint(1, 100)
-        embed.set_image(url=res["data"]["memes"][random_int]["url"])
-        embed.set_footer(text="Data fetched from imgflip")
-        await ctx.edit(embed=embed)
-    except:
-        await ctx.edit("Failed to fetch a meme :()")
+@bot.slash_command(guild_ids=guild_ids, description="Sends the bot's invite link.")
+async def invite(ctx: discord.ApplicationContext):
+    await ctx.send_response("https://discord.com/api/oauth2/authorize?client_id=898298976153591070&permissions=0&scope=applications.commands%20bot")
 
 @bot.slash_command(guild_ids=guild_ids, description="Sends the bot's latency.")
 async def ping(ctx: discord.ApplicationContext):
@@ -76,44 +60,29 @@ async def valodata(ctx: discord.ApplicationContext,username: Option(str, 'Enter 
         )
     await ctx.respond(embed=embed)
     try:
-        endpoint="https://api.henrikdev.xyz/valorant/v1/mmr/"+region+"/"+username+"/"+tag
+        endpoint="https://api.henrikdev.xyz/valorant/v2/mmr/"+region+"/"+username+"/"+tag
         data=(requests.get(endpoint).json())
         embed= discord.Embed(
-            title="Player Profile",
+            title=f"{data["data"]["name"]}#{data["data"]["tag"]}",
             color=discord.Colour.from_rgb(253,69,86)
         )
-        embed.add_field(name="Username", value=str(data["data"]["name"])+"#"+str(data["data"]["tag"]),inline=True)
-        embed.add_field(name="MMR",value=str(data["data"]["elo"]), inline=True)
-        embed.add_field(name="Rank",value=str(data["data"]["currenttierpatched"]), inline=True)
+        embed.add_field(name="MMR",value=str(data["data"]["current_data"]['elo']), inline=True)
+        embed.add_field(name="Rank",value=str(data["data"]['current_data']["currenttierpatched"]), inline=True)
+        embed.add_field(name="Highest Rank", value=str(data["data"]["highest_rank"]['patched_tier'])+" - "+str(data["data"]["highest_rank"]['season']),inline=True)
 
         embed.set_footer(text="Made by Seemant Samal",icon_url="https://media.licdn.com/dms/image/C4D03AQEAhmEuzrwbTA/profile-displayphoto-shrink_400_400/0/1642796814277?e=1701907200&v=beta&t=YZySICjOG10NUGtD8L2VPd5xOlSz7tG7r47IE9Tptic")
         embed.set_author(name="Bottomix Alpha")
-        embed.set_thumbnail(url=data["data"]["images"]["small"])
+        embed.set_thumbnail(url=data["data"]['current_data']["images"]["small"])
 
     
         await ctx.edit(embed=embed)
-    except:
+    except Exception as exp:
         embed = discord.Embed(
             title = f"Failed to fetch player details of {username}#{tag}",
             color = discord.Colour.from_rgb(253,68,86)
         )
         await ctx.edit(embed=embed)
-    # await ctx.edit(content="Username: "+str(data["data"]["name"])+"#"+str(data["data"]["tag"])+"\nElo: "+str(data["data"]["elo"])+"\nRank: "+str(data["data"]["currenttierpatched"]))
 
-@bot.slash_command(guild_ids=guild_ids, description="Sends an embed for testing.")
-async def embedtest(ctx: discord.ApplicationContext):
-    embed= discord.Embed(
-        title="Embed Title",
-        description="This is embed description",
-        color=discord.Colour.blurple()
-    )
-    embed.add_field(name="Region", value="APAC", inline=True)
-    embed.add_field(name="Player", value="seemax#2569", inline=True)
-    embed.add_field(name="MMR", value="661", inline=True)
-    embed.set_author(name="Author Name", icon_url="https://media.valorant-api.com/playercards/fc209787-414b-10d0-dcac-04832fc2c654/displayicon.png")
-    embed.set_thumbnail(url="https://media.valorant-api.com/playercards/fc209787-414b-10d0-dcac-04832fc2c654/smallart.png")
-    embed.set_image(url="https://media.valorant-api.com/playercards/fc209787-414b-10d0-dcac-04832fc2c654/wideart.png")
-    await ctx.respond(embed=embed)
 
 @bot.slash_command(guild_ids=guild_ids, description="Get mmr history")
 async def mmr_history(ctx: discord.ApplicationContext, username: Option(str, 'Enter Username', required = True), tag: Option(str, 'Enter tag',required = True),region: Option(str, 'Select Region na/eu/ap/kr', required = True, choices = ["na", "eu", "ap", "kr", "latam", "br"])):
@@ -177,7 +146,7 @@ async def mmr_history_text(ctx: discord.ApplicationContext, username: Option(str
 
             embed.add_field(name = "Tier", value = res[count]["currenttierpatched"], inline=True)
             embed.add_field(name = "MMR", value = res[count]["elo"], inline=True)
-            embed.add_field(name = "Date", value = res[count]["date"], inline = True)
+            embed.add_field(name = "Date", value = f"<t:{res[count]["date_raw"]}>", inline = True)
             count += 1
         
         await ctx.edit(embed = embed)
@@ -200,7 +169,7 @@ async def account_details(ctx: discord.ApplicationContext, username: Option(str,
         res = requests.get(endpoint_url)
         res = res.json()["data"]
         embed = discord.Embed(
-            title = f"Account details of {username}/{tag}",
+            title = f"Account details of {username}#{tag}",
             color = discord.Colour.from_rgb(253,68,86)
         )
         embed.add_field(name="Region", value = res["region"])
@@ -212,4 +181,5 @@ async def account_details(ctx: discord.ApplicationContext, username: Option(str,
             title = f"Failed to fetch account data due to some internal error of {username}#{tag}",
             color = discord.Colour.from_rgb(253,68,86)
         )
+
 bot.run(os.getenv("TOKEN"))
