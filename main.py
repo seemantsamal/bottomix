@@ -27,7 +27,7 @@ async def invite(ctx: discord.ApplicationContext):
 async def ping(ctx: discord.ApplicationContext):
     await ctx.respond('Pong! {0}ms'.format(math.floor(bot.latency*1000)))
 
-@bot.slash_command(guild_ids=guild_ids,description="Sends valorant logo")
+@bot.slash_command(description="Sends valorant logo")
 async def logo(ctx: discord.ApplicationContext):
     await ctx.send_response("https://commons.wikimedia.org/wiki/File:Valorant_logo.svg#/media/File:Valorant_logo_-_pink_color_version.svg")
 
