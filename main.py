@@ -21,7 +21,7 @@ async def on_ready():
 
 @bot.slash_command(description="Sends the bot's invite link.")
 async def invite(ctx: discord.ApplicationContext):
-    await ctx.send_response("https://discord.com/api/oauth2/authorize?client_id=898298976153591070&permissions=0&scope=applications.commands%20bot")
+    await ctx.send_response("https://discord.com/oauth2/authorize?client_id=1029815918454390845&permissions=8&scope=bot")
 
 @bot.slash_command(description="Sends the bot's latency.")
 async def ping(ctx: discord.ApplicationContext):
