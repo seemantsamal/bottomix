@@ -6,7 +6,7 @@ import dotenv
 import requests
 import math
 import pandas as pd
-from random import *
+import pymongo
 
 dotenv.load_dotenv()
 
