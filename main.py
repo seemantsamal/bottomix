@@ -6,7 +6,6 @@ import dotenv
 import requests
 import math
 import pandas as pd
-import pymongo
 
 dotenv.load_dotenv()
 
@@ -83,7 +82,7 @@ async def valodata(ctx: discord.ApplicationContext,username: Option(str, 'Enter 
         await ctx.edit(embed=embed)
 
 
-@bot.slash_command(guild_ids=1028695205949476904,description="Get mmr history")
+@bot.slash_command(guild_ids=[1028695205949476904],description="Get mmr history")
 async def mmr_history(ctx: discord.ApplicationContext, username: Option(str, 'Enter Username', required = True), tag: Option(str, 'Enter tag',required = True),region: Option(str, 'Select Region na/eu/ap/kr', required = True, choices = ["na", "eu", "ap", "kr", "latam", "br"])):
     embed = discord.Embed(
             title = f"Fetching account details of {username}#{tag}",
