@@ -143,7 +143,7 @@ async def mmr_history_text(ctx: discord.ApplicationContext, username: Option(str
         while count<5:
 
             embed.add_field(name = "Tier", value = res[count]["currenttierpatched"], inline=True)
-            embed.add_field(name = "MMR", value = res[count]["elo"], inline=True)
+            embed.add_field(name = "MMR(Δ)", value = f"{res[count]["elo"]}({res[count]["mmr_change_to_last_game"] if res[count]["mmr_change_to_last_game"]<0 else f"+{res[count]["mmr_change_to_last_game"]}"})", inline=True)
             embed.add_field(name = "Date", value = f"<t:{res[count]["date_raw"]}>", inline = True)
             count += 1
         
